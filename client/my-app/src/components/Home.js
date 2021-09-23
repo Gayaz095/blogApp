@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { connect } from "react-redux";
 import jwt_decode from "jwt-decode";
+import Editing from "./Editing";
 
 function Home(props) {
   const { authorized } = props;
@@ -38,6 +39,39 @@ function Home(props) {
   },
   [authorized]);
 
+{/**************************here*/}
+
+const handleModalFlag = (ind) => {
+  const newArray = [
+    ...article.slice(0, ind),
+    { ...article[ind], modalFlag: !article[ind].modalFlag },
+    ...article.slice(ind + 1),
+  ];
+ 
+  setArticle(newArray);
+};
+
+const handleClose = (ind) => {
+    
+  const newArray = [
+    ...article.slice(0, ind),
+    { ...article[ind], modalFlag: !article[ind].modalFlag },
+    ...article.slice(ind + 1),
+  ];
+  
+  setArticle(newArray);
+};
+
+
+
+
+
+{/**********************here*/}
+
+
+
+
+
   const handleClick = (posts) => {
     if (authorized) {
       const config = {
@@ -71,9 +105,26 @@ function Home(props) {
               
               { user === item.user_id ? 
               (
+                <div>
                 <span>
+                  <button onClick={() => { handleModalFlag(index) }}>EDIT</button>
                   <button onClick={() => { handleClick(item.id) }}>Delete</button>
                 </span>
+{/*****************here */}
+                {item.modalFlag && (
+                    <Editing
+                      open={item.modalFlag}
+                      handleClose={handleClose}
+                      heading={item.subject}
+                      content={item.information}
+                      posts={item.id}
+                      userId={item.user_id}
+                      ind={index}
+                    />
+                  )}
+                
+
+                </div>
               ) : null }
               <hr />
               
