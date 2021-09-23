@@ -5,16 +5,16 @@ import axios from "axios";
 function Editing(props) {
   const {
     open,
-    handleClose,
-    heading,
+    handleDeleting,
+    head,
     content,
     posts,
     userId,
     authorized,
     ind,
   } = props;
-  const [blogHeading, setBlogHeading] = useState(heading);
-  const [blogContent, setBlogContent] = useState(content);
+  const [articleTitle, setArticleTitle] = useState(head);
+  const [articleContent, setContent] = useState(content);
 
   const handlePost = (e) => {
     e.preventDefault();
@@ -27,8 +27,8 @@ function Editing(props) {
       };
 
       const data = {
-        information: blogContent,
-        subject: blogHeading,
+        information: articleContent,
+        subject: articleTitle,
         user_id: userId,
         id: posts,
       };
@@ -37,57 +37,51 @@ function Editing(props) {
         .put(`http://127.0.0.1:8000/polls/${posts}/`, data, config)
         .then(
           (res) => {
-           
             window.location.reload();
           },
           (error) => {
-            // console.log(error);
             window.location.reload();
-            // props.history.push("/login");
           }
         );
     }
   };
 
   return (
-    <div>
+    <div className="container">
       <form
         open={open}
-        onSubmit={() => handleClose(ind)}
+        onSubmit={() => handleDeleting(ind)}
       >
-        <div id="form-dialog-title">EDIT POST</div>
-        <div>
-          <div>
-            Make the changes and click on Submit. Changed your mind? click on
-            Cancel.
+        <div className="header-edit">EDIT POST</div>
+        <div className="header-section">
+          <div style={{ 'color': 'black' }}>
+            Edit section:
           </div>
-          <input
-            id="name"
-            label="Blog Heading"
+          <textarea
+            style={{ width: "100%" }}
+            placeholder="Subject"
             type="text"
-            value={blogHeading}
+            value={articleTitle}
             onChange={(evt) => {
-              setBlogHeading(evt.target.value);
+              setArticleTitle(evt.target.value);
             }}
           />
 
-          <div m={4} />
-          <input
+          <div/>
+          <textarea
             style={{ width: "100%" }}
-            variant="outlined"
-            aria-label="maximum height"
-            placeholder="Maximum 4 rows"
-            value={blogContent}
+            placeholder="Information"
+            value={articleContent}
             onChange={(evt) => {
-              setBlogContent(evt.target.value);
+              setContent(evt.target.value);
             }}
           />
         </div>
         <div>
-          <button onClick={handlePost} color="primary">
+          <button onClick={handlePost}>
             Submit
           </button>
-          <button onClick={() => handleClose(ind)} color="primary">
+          <button onClick={() => handleDeleting(ind)}>
             Cancel
           </button>
 
@@ -102,106 +96,3 @@ const mapStateToProps = (state) => ({
 });
 
 export default connect(mapStateToProps)(Editing);
-
-
-
-
-// import React, { useState } from "react";
-// import { connect } from "react-redux";
-// import axios from "axios";
-
-// function Editing(props) {
-//   const {
-//     authorized,
-//     open,
-//     handleClose,
-//     heading,
-//     content,
-//     posts,
-//     userId,
-//     ind,
-//   } = props;
-//   const [blogHeading, setBlogHeading] = useState(heading);
-//   const [blogContent, setBlogContent] = useState(content);
-
-//   const handlePost = (e) => {
-//     e.preventDefault();
-   
-//     if (authorized) {
-//       const config = {
-//         headers: {
-//           Authorization: `Bearer ${authorized}`,
-//         },
-//       };
-
-//       const data = {
-//         information: blogContent,
-//         subject: blogHeading,
-//         user_id: userId,
-//         id: posts,
-//       };
-
-//       axios
-//         .put(`http://127.0.0.1:8000/user_blog_api/${posts}/`, data, config)
-//         .then(
-//           (res) => {
-//             window.location.reload();
-//           },
-//           (error) => {
-//             // console.log(error);
-//             window.location.reload();
-//             // props.history.push("/login");
-//           }
-//         );
-//     }
-//   };
-
-//   return (
-//     <div>
-//       <form
-//         open={open}
-//         onSubmit={()=>handleClose(ind)}
-//       >
-//         <div>EDIT POST</div>
-//         <div>
-//           <div>
-//             Make the changes and click on Submit. Changed your mind? click on
-//             Cancel.
-//           </div>
-//           <textarea
-//             id="name"
-//             label="Blog Heading"
-//             type="text"
-//             value={blogHeading}
-//             onChange={(evt) => {
-//               setBlogHeading(evt.target.value);
-//             }}
-//           />
-
-//           <div />
-//           <textarea
-//             placeholder="Maximum 4 rows"
-//             value={blogContent}
-//             onChange={(evt) => {
-//               setBlogContent(evt.target.value);
-//             }}
-//           />
-//           </div>
-//         <div>
-//           <button onClick={handlePost}>
-//             Submit
-//           </button>
-//           <button onClick={() => handleClose(ind)}>
-//             Cancel
-//           </button>
-//         </div>
-//       </form>
-//     </div>
-//   );
-// }
-
-// const mapStateToProps = (state) => ({
-//   authorized: state.authentication.tokenId,
-// });
-
-// export default connect(mapStateToProps)(Editing);

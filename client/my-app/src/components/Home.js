@@ -39,38 +39,23 @@ function Home(props) {
   },
   [authorized]);
 
-{/**************************here*/}
+  const handleEdit = (ind) => {
+    const newArray = [
+      ...article.slice(0, ind),
+      { ...article[ind], editPage: !article[ind].editPage },
+      ...article.slice(ind + 1),
+    ];
+    setArticle(newArray);
+  };
 
-const handleModalFlag = (ind) => {
-  const newArray = [
-    ...article.slice(0, ind),
-    { ...article[ind], modalFlag: !article[ind].modalFlag },
-    ...article.slice(ind + 1),
-  ];
- 
-  setArticle(newArray);
-};
-
-const handleClose = (ind) => {
-    
-  const newArray = [
-    ...article.slice(0, ind),
-    { ...article[ind], modalFlag: !article[ind].modalFlag },
-    ...article.slice(ind + 1),
-  ];
-  
-  setArticle(newArray);
-};
-
-
-
-
-
-{/**********************here*/}
-
-
-
-
+  const handleDeleting = (ind) => {
+    const newArray = [
+      ...article.slice(0, ind),
+      { ...article[ind], editPage: !article[ind].editPage },
+      ...article.slice(ind + 1),
+    ];
+    setArticle(newArray);
+  };
 
   const handleClick = (posts) => {
     if (authorized) {
@@ -88,7 +73,7 @@ const handleClose = (ind) => {
           (error) => {
             window.location.reload();
           }
-            );
+        );
     }
   };
 
@@ -107,24 +92,22 @@ const handleClose = (ind) => {
               (
                 <div>
                 <span>
-                  <button onClick={() => { handleModalFlag(index) }}>EDIT</button>
+                  <button onClick={() => { handleEdit(index) }}>EDIT</button>
                   <button onClick={() => { handleClick(item.id) }}>Delete</button>
                 </span>
-{/*****************here */}
-                {item.modalFlag && (
+                {item.editPage && (
                     <Editing
-                      open={item.modalFlag}
-                      handleClose={handleClose}
-                      heading={item.subject}
+                      open={item.editPage}
+                      handleDeleting={handleDeleting}
+                      head={item.subject}
                       content={item.information}
                       posts={item.id}
                       userId={item.user_id}
                       ind={index}
                     />
                   )}
-                
-
                 </div>
+
               ) : null }
               <hr />
               

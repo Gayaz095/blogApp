@@ -4,80 +4,7 @@ import { connect } from "react-redux";
 import jwt_decode from "jwt-decode";
 import Editing from "./Editing";
 
-
-import { withStyles, makeStyles } from "@material-ui/core/styles";
-import MuiAccordion from "@material-ui/core/Accordion";
-import MuiAccordionSummary from "@material-ui/core/AccordionSummary";
-import MuiAccordionDetails from "@material-ui/core/AccordionDetails";
-import Typography from "@material-ui/core/Typography";
-import Button from "@material-ui/core/Button";
-import ModalForm from "./ModalForm";
-import InputLabel from '@material-ui/core/InputLabel';
-
-const Accordion = withStyles({
-  root: {
-    border: "1px solid rgba(0, 0, 0, .125)",
-    boxShadow: "none",
-    "&:not(:last-child)": {
-      borderBottom: 0,
-    },
-    "&:before": {
-      display: "none",
-    },
-    "&$expanded": {
-      margin: "auto",
-    },
-  },
-  expanded: {},
-})(MuiAccordion);
-
-const AccordionSummary = withStyles({
-  root: {
-    backgroundColor: "rgba(0, 0, 0, .03)",
-    borderBottom: "1px solid rgba(0, 0, 0, .125)",
-    marginBottom: -1,
-    minHeight: 56,
-    "&$expanded": {
-      minHeight: 56,
-    },
-  },
-  content: {
-    "&$expanded": {
-      margin: "12px 0",
-    },
-  },
-  expanded: {},
-})(MuiAccordionSummary);
-
-const AccordionDetails = withStyles((theme) => ({
-  root: {
-    padding: theme.spacing(2),
-  },
-}))(MuiAccordionDetails);
-
-const useStyles = makeStyles((theme) => ({
-  root: {
-    "& > *": {
-      margin: theme.spacing(1),
-    },
-  },
-}));
-
-
-
 function Posts(props) {
-
-
-  const triggerText = "Open form";
-  const classes = useStyles();
-  const [expanded, setExpanded] = React.useState("panel1");
-
-  const handleChange = (panel) => (event, newExpanded) => {
-    setExpanded(newExpanded ? panel : false);
-  };
-
-
-
   const { authorized } = props;
   const [title, setTitle] = useState([]);
   const [user, setUser] = useState(null);
@@ -112,34 +39,24 @@ function Posts(props) {
     }
   }, 
   [authorized]);
-{/**************************here*/}
 
-const handleModalFlag = (ind) => {
-  const newArray = [
+  const handleEdit = (ind) => {
+    const newArray = [
+      ...title.slice(0, ind),
+      { ...title[ind], editPage: !title[ind].editPage },
+      ...title.slice(ind + 1),
+    ];
+    setTitle(newArray);
+  };
+
+  const handleDeleting = (ind) => {
+    const newArray = [
     ...title.slice(0, ind),
-    { ...title[ind], modalFlag: !title[ind].modalFlag },
-    ...title.slice(ind + 1),
-  ];
- 
-  setTitle(newArray);
-};
-
-const handleClose = (ind) => {
-    
-  const newArray = [
-    ...title.slice(0, ind),
-    { ...title[ind], modalFlag: !title[ind].modalFlag },
-    ...title.slice(ind + 1),
-  ];
-  
-  setTitle(newArray);
-};
-
-
-
-
-
-{/**********************here*/}
+      { ...title[ind], editPage: !title[ind].editPage },
+      ...title.slice(ind + 1),
+    ];
+    setTitle(newArray);
+  };
 
   const handleClick = (posts) => {
     if (authorized) {
@@ -173,14 +90,13 @@ const handleClose = (ind) => {
               {user === item.user_id ? 
               (
                 <div>
-                  <button onClick={() => { handleModalFlag(index) }}>EDIT</button>
+                  <button onClick={() => { handleEdit(index) }}>EDIT</button>
                   <button onClick={() => { handleClick(item.id) }}>Delete</button>
-{/*****************here */}
-                  {item.modalFlag && (
+                  {item.editPage && (
                     <Editing
-                      open={item.modalFlag}
-                      handleClose={handleClose}
-                      heading={item.subject}
+                      open={item.editPage}
+                      handleDeleting={handleDeleting}
+                      head={item.subject}
                       content={item.information}
                       posts={item.id}
                       userId={item.user_id}
